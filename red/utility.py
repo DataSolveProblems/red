@@ -5,3 +5,6 @@ def seconds_to_date(v):
         return ''
     d = datetime.fromtimestamp(v).strftime('%Y-%m-%dT%H:%M:%S')
     return d
+
+def timestamp():
+    return datetime.now().strftime('%y_%m_%d_%H_%M_%S')

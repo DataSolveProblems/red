@@ -61,7 +61,6 @@ class Red:
         https://www.reddit.com/dev/api/oauth#GET_subreddits_{where}
         Get all subreddits.
         """
-        print(params)
         response = requests.get(
             OAUTH_ENDPOINT + f'/subreddits/{where}',
             headers=self.headers,
@@ -69,4 +68,43 @@ class Red:
         )
         return response
 
+    def search_subreddits(self, **params):
+        """
+        https://www.reddit.com/dev/api/oauth#GET_subreddits_search
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/subreddits/search',
+            headers=self.headers,
+            params=params
+        )
+        return response        
+
+    def r_subreddit_hot(self, **params):
+        pass
+
+    def r_subreddit_new(self, **params):
+        pass
+
+    def r_subreddit_search(self, subreddit="", **params):
+        """
+        To limit the search to a specific subreddit,
+        set the restrict_sr to True
+        e.g. params={'q': 'why is python', 'restrict_sr': 1}
+
+        To search flair:
+        e.g. flair:"flair text
+        """
+        if subreddit:
+            endpoint = f'/r/{subreddit}/search'
+        else:
+            endpoint = '/search'
+
+        print(OAUTH_ENDPOINT + endpoint)
+        response = requests.get(
+            OAUTH_ENDPOINT + endpoint,
+            # OAUTH_ENDPOINT + f'/r/{subreddit}/search',
+            headers=self.headers,
+            params=params
+        )
+        return response    
 
