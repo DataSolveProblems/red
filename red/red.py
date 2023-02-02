@@ -3,7 +3,7 @@ from red.auth import USER_AGENT
 
 OAUTH_ENDPOINT = 'https://oauth.reddit.com'
 
-class Red:
+class User:
     def __init__(self, access_token):
         self.access_token = access_token
 
@@ -12,8 +12,8 @@ class Red:
         return {
             'User-Agent': USER_AGENT,
             'Authorization': 'Bearer ' + self.access_token
-        }
-    
+        }    
+
     def search_user(self, **params):
         """
         https://www.reddit.com/dev/api/oauth#GET_users_search
@@ -46,6 +46,18 @@ class Red:
         )
         return response        
 
+
+class Red:
+    def __init__(self, access_token):
+        self.access_token = access_token
+
+    @property
+    def headers(self):
+        return {
+            'User-Agent': USER_AGENT,
+            'Authorization': 'Bearer ' + self.access_token
+        }
+    
     def subreddit_post_requirements(self, subreddit):
         """
         https://www.reddit.com/dev/api/oauth#GET_api_v1_{subreddit}_post_requirements
@@ -99,7 +111,6 @@ class Red:
         else:
             endpoint = '/search'
 
-        print(OAUTH_ENDPOINT + endpoint)
         response = requests.get(
             OAUTH_ENDPOINT + endpoint,
             # OAUTH_ENDPOINT + f'/r/{subreddit}/search',
