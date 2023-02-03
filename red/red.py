@@ -91,11 +91,27 @@ class Red:
         )
         return response        
 
-    def r_subreddit_hot(self, **params):
-        pass
+    def r_subreddit_hot(self, subreddit, **params):
+        """
+        https://www.reddit.com/dev/api/oauth#GET_hot
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/r/{subreddit}/hot',
+            headers=self.headers,
+            params=params
+        )
+        return response
 
-    def r_subreddit_new(self, **params):
-        pass
+    def r_subreddit_new(self, subreddit, **params):
+        """
+        https://www.reddit.com/dev/api/oauth#GET_new
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/r/{subreddit}/new',
+            headers=self.headers,
+            params=params
+        )
+        return response
 
     def r_subreddit_search(self, subreddit="", **params):
         """
