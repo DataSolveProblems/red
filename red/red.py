@@ -3,7 +3,7 @@ from red.auth import USER_AGENT
 
 OAUTH_ENDPOINT = 'https://oauth.reddit.com'
 
-class Red:
+class User:
     def __init__(self, access_token):
         self.access_token = access_token
 
@@ -12,8 +12,8 @@ class Red:
         return {
             'User-Agent': USER_AGENT,
             'Authorization': 'Bearer ' + self.access_token
-        }
-    
+        }    
+
     def search_user(self, **params):
         """
         https://www.reddit.com/dev/api/oauth#GET_users_search
@@ -46,6 +46,18 @@ class Red:
         )
         return response        
 
+
+class Red:
+    def __init__(self, access_token):
+        self.access_token = access_token
+
+    @property
+    def headers(self):
+        return {
+            'User-Agent': USER_AGENT,
+            'Authorization': 'Bearer ' + self.access_token
+        }
+    
     def subreddit_post_requirements(self, subreddit):
         """
         https://www.reddit.com/dev/api/oauth#GET_api_v1_{subreddit}_post_requirements
@@ -61,7 +73,6 @@ class Red:
         https://www.reddit.com/dev/api/oauth#GET_subreddits_{where}
         Get all subreddits.
         """
-        print(params)
         response = requests.get(
             OAUTH_ENDPOINT + f'/subreddits/{where}',
             headers=self.headers,
@@ -69,4 +80,73 @@ class Red:
         )
         return response
 
+    def search_subreddits(self, **params):
+        """
+        https://www.reddit.com/dev/api/oauth#GET_subreddits_search
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/subreddits/search',
+            headers=self.headers,
+            params=params
+        )
+        return response        
 
+    def r_subreddit_hot(self, subreddit, **params):
+        """
+        https://www.reddit.com/dev/api/oauth#GET_hot
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/r/{subreddit}/hot',
+            headers=self.headers,
+            params=params
+        )
+        return response
+
+    def r_subreddit_new(self, subreddit, **params):
+        """
+        https://www.reddit.com/dev/api/oauth#GET_new
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/r/{subreddit}/new',
+            headers=self.headers,
+            params=params
+        )
+        return response
+
+    def r_subreddit_search(self, subreddit="", **params):
+        """
+        To limit the search to a specific subreddit,
+        set the restrict_sr to True
+        e.g. params={'q': 'why is python', 'restrict_sr': 1}
+
+        To search flair:
+        e.g. flair:"flair text
+        """
+        if subreddit:
+            endpoint = f'/r/{subreddit}/search'
+        else:
+            endpoint = '/search'
+
+        response = requests.get(
+            OAUTH_ENDPOINT + endpoint,
+            # OAUTH_ENDPOINT + f'/r/{subreddit}/search',
+            headers=self.headers,
+            params=params
+        )
+        return response    
+
+    def extract_comments(self, subreddit, post_id='', **params):
+        """
+        https://www.reddit.com/dev/api/#POST_api_submit
+        # returns main threads
+        response.json()[1]['data']['children']
+
+        # returns replies of each thread
+        response.json()[1]['data']['children'][1]['data']['replies']['data']['children']
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/r/{subreddit}/comments/{post_id}',
+            headers=self.headers, 
+            params=params
+        )
+        return response
