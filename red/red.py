@@ -135,3 +135,18 @@ class Red:
         )
         return response    
 
+    def extract_comments(self, subreddit, post_id='', **params):
+        """
+        https://www.reddit.com/dev/api/#POST_api_submit
+        # returns main threads
+        response.json()[1]['data']['children']
+
+        # returns replies of each thread
+        response.json()[1]['data']['children'][1]['data']['replies']['data']['children']
+        """
+        response = requests.get(
+            OAUTH_ENDPOINT + f'/r/{subreddit}/comments/{post_id}',
+            headers=self.headers, 
+            params=params
+        )
+        return response
