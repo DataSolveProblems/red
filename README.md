@@ -24,3 +24,22 @@ access_token = authorize(
 r = Red(access_token['access_token'])
 response2 = r.r_subreddit_search('learnpython', q='why is python')
 ```
+
+## Examples
+
+### Extract Subreddit comments (all posts)
+
+```python
+r = Red(access_token['access_token'])
+response = r.extract_comments('dataengineering')
+response.json()
+```
+
+### Extract Subreddit comments (specific post)
+
+```python
+post_id = '11sintx'
+r = Red(access_token['access_token'])
+response = r.extract_comments('dataengineering', post_id)
+print(response.json())
+```
